@@ -5,6 +5,7 @@
 // Author: UltraCanvas Framework
 
 #include "UltraCanvasTextInput.h"
+#include "UltraCanvasClipboard.h"
 #include <string>
 #include <vector>
 #include <functional>
@@ -1171,12 +1172,13 @@ namespace UltraCanvas {
     }
 
     void UltraCanvasTextInput::CopyToClipboard(const std::string &text) {
-        // Platform-specific clipboard implementation needed
+        SetClipboardText(text);
     }
 
     std::string UltraCanvasTextInput::GetFromClipboard() {
-        // Platform-specific clipboard implementation needed
-        return "";
+        std::string text;
+        GetClipboardText(text);
+        return text;
     }
 
     int UltraCanvasTextInput::GetCaretLineNumber() const {

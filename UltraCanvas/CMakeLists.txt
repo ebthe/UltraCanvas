@@ -68,8 +68,8 @@ pkg_check_modules(CAIRO REQUIRED cairo)
 # Pango - Text Layout
 pkg_check_modules(PANGO REQUIRED pango pangocairo)
 
-# FontConfig - bundled-font registration (Linux always; Windows when Pango is built with the FontConfig backend)
-if(NOT APPLE)
+# FontConfig - bundled-font registration (Linux only)
+if(ULTRACANVAS_PLATFORM STREQUAL "Linux")
     pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
 endif()
 
@@ -79,6 +79,14 @@ pkg_check_modules(TINYXML2 REQUIRED tinyxml2)
 
 # libvips - Image processing
 pkg_check_modules(LIBVIPS REQUIRED vips vips-cpp)
+
+# zbar - QR/barcode decoder (optional)
+pkg_check_modules(ZBAR zbar)
+if(ZBAR_FOUND)
+    message(STATUS "  zbar: ${ZBAR_VERSION} (QR decoder enabled)")
+else()
+    message(STATUS "  zbar: NOT FOUND (QR decoder disabled)")
+endif()
 
 # FreeType - Font Rendering
 # On Windows with vcpkg, use pkg-config since FindFreetype may not locate vcpkg's install
@@ -210,8 +218,13 @@ set(ULTRACANVAS_CORE_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasGourceTree.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasTreeMapElement.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasFlowChartPalette.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasGaugeDiagramElement.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasCompositorDiagram.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Diagrams/UltraCanvasParliamentDiagram.cpp
 
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Text/UltraCanvasMarkdown.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/QRCode/UltraCanvasQRCode.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/QRCode/third_party/qrcodegen.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Charts/UltraCanvasChartElement.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Charts/UltraCanvasChartCoreRendering.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Charts/UltraCanvasChartBasicTypes.cpp
@@ -356,7 +369,7 @@ target_include_directories(${ULTRACANVAS_LIB_NAME}
 foreach(_inc_dir ${CAIRO_INCLUDE_DIRS} ${PANGO_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} ${TINYXML2_INCLUDE_DIRS})
     target_include_directories(${ULTRACANVAS_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${_inc_dir}>)
 endforeach()
-if(NOT APPLE AND FONTCONFIG_FOUND)
+if(ULTRACANVAS_PLATFORM STREQUAL "Linux" AND FONTCONFIG_FOUND)
     foreach(_inc_dir ${FONTCONFIG_INCLUDE_DIRS})
         target_include_directories(${ULTRACANVAS_LIB_NAME} PRIVATE ${_inc_dir})
     endforeach()
@@ -364,6 +377,11 @@ endif()
 if(LIBVIPS_FOUND)
     foreach(_inc_dir ${LIBVIPS_INCLUDE_DIRS})
         target_include_directories(${ULTRACANVAS_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${_inc_dir}>)
+    endforeach()
+endif()
+if(ZBAR_FOUND)
+    foreach(_inc_dir ${ZBAR_INCLUDE_DIRS})
+        target_include_directories(${ULTRACANVAS_LIB_NAME} PRIVATE ${_inc_dir})
     endforeach()
 endif()
 
@@ -425,7 +443,6 @@ elseif(ULTRACANVAS_PLATFORM STREQUAL "Windows")
             comctl32
             imm32
             dwmapi
-            ${FONTCONFIG_LIBRARIES}
     )
     if(ULTRACANVAS_ENABLE_GL)
         target_link_libraries(${ULTRACANVAS_LIB_NAME} PUBLIC
@@ -455,6 +472,7 @@ target_link_libraries(${ULTRACANVAS_LIB_NAME}
         ${LIBVIPS_LIBRARIES}
         ${GLIB_LIBRARIES}
         ${TINYXML2_LIBRARIES}
+        ${ZBAR_LIBRARIES}
         fmt::fmt
     # PRIVATE
     #     grapheme
@@ -468,6 +486,7 @@ target_compile_definitions(${ULTRACANVAS_LIB_NAME}
         ULTRACANVAS_VERSION="${ULTRACANVAS_VERSION}"
         ULTRACANVAS_PLATFORM_${ULTRACANVAS_PLATFORM}=1
         $<$<BOOL:${LIBVIPS_FOUND}>:HAS_LIBVIPS=1>
+        $<$<BOOL:${ZBAR_FOUND}>:ULTRACANVAS_QRCODE_HAS_DECODER=1>
         $<$<CXX_COMPILER_ID:MSVC>:_USE_MATH_DEFINES>
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<BOOL:${WIN32}>:WIN32_LEAN_AND_MEAN>

@@ -98,11 +98,11 @@ namespace UltraCanvas {
 
         ctx->PushState();
 
-        if (loadedImage->IsValid()) {
+        if (loadedImage && loadedImage->IsValid()) {
             DrawLoadedImage(ctx);
-//        } else if (loadedImage->IsLoading()) {
+//        } else if (loadedImage && loadedImage->IsLoading()) {
 //            DrawLoadingPlaceholder(ctx);
-        } else if (!loadedImage->errorMessage.empty() && showErrorPlaceholder) {
+        } else if (loadedImage && !loadedImage->errorMessage.empty() && showErrorPlaceholder) {
             DrawErrorPlaceholder(ctx);
         }
         ctx->PopState();

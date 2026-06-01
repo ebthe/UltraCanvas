@@ -1,6 +1,6 @@
 // UltraCanvasApplication.cpp
 // Main UltraCanvas App
-// Version: 1.4.2 - PANGO_BACKEND=fontconfig env so MSYS2 Pango uses FC instead of Win32 backend
+// Version: 1.4.3 - Removed fontconfig dependency on Windows
 // Last Modified: 2026-05-10
 // Author: UltraCanvas Framework
 
@@ -17,10 +17,6 @@
 #include "UltraCanvasConfig.h"
 #include "UltraCanvasUtils.h"
 #include "UltraCanvasDebug.h"
-
-#if !defined(__APPLE__)
-#include <fontconfig/fontconfig.h>
-#endif
 
 #if defined(__linux__) || defined(__unix__)
 #include <unistd.h>

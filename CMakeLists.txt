@@ -118,10 +118,15 @@ if(BUILD_DEMO_APP)
             Apps/DemoApp/UltraCanvasTabExamples.cpp
             Apps/DemoApp/UltraCanvasImagePerformanceTest.cpp
             Apps/DemoApp/UltraCanvasTextRenderingExamples.cpp
+            Apps/DemoApp/UltraCanvasGaugeExamples.cpp
             Apps/DemoApp/UltraCanvasPieChartExamples.cpp
+            Apps/DemoApp/UltraCanvasPieChartV2Examples.cpp
             Apps/DemoApp/UltraCanvasAdjacencyDiagramExamples.cpp
             Apps/DemoApp/UltraCanvasArcDiagramExamples.cpp
+            Apps/DemoApp/UltraCanvasCompositorDiagramExamples.cpp
+            Apps/DemoApp/UltraCanvasParliamentExamples.cpp
             Apps/DemoApp/UltraCanvasSlideshowExamples.cpp
+            Apps/DemoApp/UltraCanvasQRCodeExamples.cpp
     )
 
     # These files depend on libvips

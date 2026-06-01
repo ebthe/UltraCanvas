@@ -102,7 +102,7 @@ public:
     }
     
     Point2Di GetImageSize() const {
-        if (loadedImage->IsValid()) {
+        if (loadedImage && loadedImage->IsValid()) {
             return Point2Di(loadedImage->GetWidth(), loadedImage->GetHeight());
         }
         return Point2Di(0, 0);

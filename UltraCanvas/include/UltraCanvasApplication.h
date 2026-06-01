@@ -32,21 +32,7 @@ namespace UltraCanvas {
     // Returns absolute path to media/fonts/dejavu/ in the resources dir.
     std::string GetBundledFontsDir();
 
-    // Pins hinting / antialias / autohint / lcdfilter defaults for the bundled
-    // DejaVu families so system fontconfig (which differs between MSYS2 and
-    // Linux distros) cannot change how the framework's text looks. Pass the
-    // current FcConfig* as void* to keep this header free of fontconfig.h;
-    // implemented on Linux + Windows, no-op elsewhere. Returns true on success.
-//    bool LoadDejaVuFcRules(void* fcConfig);
-
-    // Writes a runtime fonts.conf (with the absolute path to the bundled
-    // DejaVu directory baked in) and sets the FONTCONFIG_FILE env variable so
-    // the next FcInit() call has a valid config regardless of how broken the
-    // system default is (notably on packaged MSYS2 Windows builds run outside
-    // the mingw shell). On Linux the generated config <include>s the system
-    // fonts.conf so apps still see non-DejaVu system fonts via FC. No-op on
-    // macOS. Honours an externally-set FONTCONFIG_FILE — does not override.
-    void SetupBundledFontconfig();
+    // SetupBundledFontconfig was removed — Windows no longer uses fontconfig.
 
     class UltraCanvasApplicationBase {
     friend UltraCanvasWindowBase;

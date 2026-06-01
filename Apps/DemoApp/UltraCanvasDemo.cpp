@@ -117,6 +117,7 @@ namespace UltraCanvas {
 
         // Set container style
         ContainerStyle containerStyle;
+        containerStyle.autoShowScrollbars = false;
         containerStyle.forceShowHorizontalScrollbar = false;
         containerStyle.forceShowVerticalScrollbar = false;
         SetContainerStyle(containerStyle);
@@ -551,9 +552,7 @@ namespace UltraCanvas {
                 .AddVariant("breadcrumb", "ShrinkText Overflow")
                 .AddVariant("breadcrumb", "Rounded Strip");
 
-        basicBuilder.AddItem("gauges", "Gauges", "Gauges",
-                             ImplementationStatus::PartiallyImplemented,
-                             [this]() { return CreatePartiallyImplementedExamples("Gauges is not ready yet"); });
+
 
         // ===== EXTENDED FUNCTIONALITY =====
         auto extendedBuilder = DemoCategoryBuilder(this, DemoCategory::ExtendedFunctionality);
@@ -751,6 +750,11 @@ namespace UltraCanvas {
                              "DemoApp/UltraCanvasPieChartExamples.cpp",
                              "Docs/UltraCanvas/UltraCanvasPieChartExamples.md");
 
+        chartBuilder.AddItem("piechartv2", "Pie Chart V2", "Pie chart v2 — simplified rewrite for comparison",
+                             ImplementationStatus::FullyImplemented,
+                             [this]() { return CreatePieChartV2Examples(); },
+                             "DemoApp/UltraCanvasPieChartV2Examples.cpp");
+
         chartBuilder.AddItem("financialcharts", "Candlestick Chart", "Stock market OHLC and candlestick charts",
                              ImplementationStatus::FullyImplemented,
                              [this]() { return CreateFinancialChartExamples(); },
@@ -908,6 +912,33 @@ namespace UltraCanvas {
                                [this]() { return CreateArcDiagramExamples(); },
                                "Apps/DemoApp/UltraCanvasArcDiagramExamples.cpp",
                                "Docs/UltraCanvas/UltraCanvasArcDiagramExamples.md");
+    diagramBuilder.AddItem("compositor", "Compositor Diagram", "Node-based compositor with subgraph, visual scripting, and feature playground",
+                               ImplementationStatus::FullyImplemented,
+                               [this]() { return CreateCompositorDiagramExamples(); },
+                               "DemoApp/UltraCanvasCompositorDiagramExamples.cpp",
+                               "Docs/UltraCanvas/UltraCanvasCompositorDiagramExamples.md")
+                .AddVariant("compositor", "Image Compositor")
+                .AddVariant("compositor", "Subgraph / Groups")
+                .AddVariant("compositor", "Visual Scripting")
+                .AddVariant("compositor", "Feature Playground")
+                .AddVariant("compositor", "Logic Diagram")
+                                 .AddVariant("compositor", "Marketing Funnel");
+    diagramBuilder.AddItem("parliament", "Parliament Diagram",
+                               "Semicircle, horseshoe, circle, opposing, classroom, and two-party layouts with interactive seat selection, auto-fit labels, and dynamic layout switching",
+                               ImplementationStatus::FullyImplemented,
+                               [this]() { return CreateParliamentDiagramExamples(); },
+                               "DemoApp/UltraCanvasParliamentExamples.cpp",
+                               ""
+                 );
+    diagramBuilder.AddItem("gauges", "Gauges", "18-mode configurable gauge system covering analog, linear, and specialized gauges",
+                               ImplementationStatus::FullyImplemented,
+                               [this]() { return CreateGaugeExamples(); },
+                               "DemoApp/UltraCanvasGaugeExamples.cpp",
+                               "Docs/UltraCanvas/UltraCanvasGaugeExamples.md")
+                .AddVariant("gauges", "Analog (Speedometer, Semicircular, Compass)")
+                .AddVariant("gauges", "Progress (Bar, Ring, Battery, Thermometer)")
+                .AddVariant("gauges", "Digital (LED, LCD)")
+                .AddVariant("gauges", "Custom (Vertical bar, Dark themed)");
     diagramBuilder.AddItem("mindmap", "MindMap", "MindMap",
                                ImplementationStatus::NotImplemented,
                                [this]() { return CreatePartiallyImplementedExamples("MindMap is not ready yet"); });
@@ -1052,10 +1083,9 @@ namespace UltraCanvas {
 
         auto toolsBuilder = DemoCategoryBuilder(this, DemoCategory::Tools);
 
-        toolsBuilder.AddItem("qrcode", "QR code", "QR code scanner",
-                             ImplementationStatus::PartiallyImplemented,
-                             [this]() { return CreatePartiallyImplementedExamples("## QR code\n"
-                                                                                  "Not ready yet"); });
+        toolsBuilder.AddItem("qrcode", "QR code", "QR code generator and decoder",
+                             ImplementationStatus::FullyImplemented,
+                             [this]() { return CreateQRCodeExamples(); });
 
         toolsBuilder.AddItem("barcode", "Bar code", "Bar code",
                                ImplementationStatus::PartiallyImplemented,
